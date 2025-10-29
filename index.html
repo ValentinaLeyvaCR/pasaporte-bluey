@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pasaporte de Aventuras Bluey</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Configuración Global --- */
+        body, html {
+            margin: 0; padding: 0; font-family: 'Nunito', sans-serif; 
+            overflow: hidden; height: 100%; background-color: #cceeff; /* Azul cielo más vibrante */
+            touch-action: manipulation; color: #37474f; 
+        }
+
+        /* --- Contenedor de Páginas --- */
+        .page {
+            width: 100%; height: 100vh; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-in-out; /* Suavizado */
+            visibility: hidden; opacity: 0; padding: 20px; box-sizing: border-box; line-height: 1.5;
+            background-color: #cceeff; /* Azul cielo */
+            overflow: hidden; /* Evitar barras de scroll innecesarias */
+            position: relative; /* Para z-index de elementos decorativos */
+        }
+        
+        /* Textura sutil como papel */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="1" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23FFF1E0" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="100%" height="100%" filter="url(%23f)" opacity="0.15"/></svg>');
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .page.active { visibility: visible; opacity: 1; }
+        
+        h1 { 
+            font-family: 'Nunito', sans-serif; font-weight: 900; /* Extra Bold */
+            font-size: 3em; color: #0277bd; /* Azul Bluey */ 
+            text-align: center; 
+            /* Sombra tipo contorno */
+            text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 3px 3px 0 #ff9800; /* Contorno blanco + Sombra naranja */
+            margin-bottom: 10px; line-height: 1.1;
+        }
+        p { 
+            font-size: 1.4em; text-align: center; color: #ff6f00; /* Naranja */ 
+            font-weight: 700; margin-top: 5px; text-shadow: 1px 1px #fff;
+        }
+
+        /* --- Botones Estilo Bluey Creativo --- */
+        .bluey-button {
+            background: #ffb74d; /* Naranja más brillante */
+            border: none; /* Sin borde */
+            border-bottom: 5px solid #fb8c00; /* Sombra 3D */
+            color: #fff;
+            padding: 15px 35px; /* Más padding */
+            font-size: 1.3em; font-family: 'Nunito', sans-serif; font-weight: 800;
+            border-radius: 50px; 
+            cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+            transition: all 0.1s ease-out; /* Transición rápida */
+            -webkit-tap-highlight-color: transparent; width: 90%; max-width: 320px; text-align: center; margin-bottom: 20px; /* Más margen */
+            position: relative; /* Para icono */
+        }
+        .bluey-button:hover { 
+            background: #ffcc80; 
+            transform: translateY(-2px); 
+            border-bottom-width: 7px; /* Aumenta sombra */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+        }
+        .bluey-button:active { 
+            transform: translateY(2px); /* Efecto presionado */
+            border-bottom-width: 3px; /* Reduce sombra */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
+        }
+        a.bluey-button { text-decoration: none; box-sizing: border-box; display: inline-block; }
+
+        /* Iconos opcionales en botones */
+        .bluey-button::before {
+            content: attr(data-icon); /* Usa data-icon="🎾" */
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+
+        @keyframes fadeIn { to { opacity: 1; } }
+        
+        /* --- Página 1: Bienvenida --- */
+        #page-bienvenida { background: linear-gradient(to bottom, #a5d6a7, #81c784); /* Degradado verde */ }
+        #page-bienvenida h1 { color: #fff; text-shadow: -2px -2px 0 #388e3c, 2px -2px 0 #388e3c, -2px 2px 0 #388e3c, 2px 2px 0 #388e3c, 3px 3px 0 #fb8c00; } 
+        #page-bienvenida p { color: #fff; text-shadow: 1px 1px #388e3c; }
+        #page-bienvenida .animated-message { font-size: 1.5em; color: #fff; opacity: 0; animation: fadeIn 2s ease 1s forwards; }
+        
+        /* --- Página 2: Portada (Logo) --- */
+        #page-portada { background: linear-gradient(to bottom, #fff9c4, #fff59d); /* Degradado amarillo */ }
+        #page-portada h1 { color: #f57f17; text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 3px 3px 0 #0277bd; } 
+        #page-portada .logo { 
+            width: 250px; max-width: 80%; border-radius: 15px; /* Más redondeado */
+            margin-bottom: 20px; background: #fff; padding:15px; 
+            box-shadow: 0 5px 15px rgba(255,111,0,0.5); /* Sombra más pronunciada */
+            border: 3px dashed #ffb74d; /* Borde punteado */
+        }
+
+        /* --- Página 3: Historia (Bluey) --- */
+        #page-historia { 
+            overflow-y: auto; justify-content: flex-start; 
+            background: linear-gradient(to bottom, #bbdefb, #90caf9); /* Degradado azul */ 
+        }
+        #page-historia h1 { color: #0d47a1;} 
+        .historia-container img { 
+            width: 280px; max-width: 70%; margin-top: 10px; 
+            filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.3));
+             /* Borde irregular tipo nube/recorte */
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            border: 5px solid white;
+            padding: 5px;
+            background-color: white; /* Fondo blanco detrás */
+            box-shadow: 0 0 0 5px #ffb74d; /* Segundo borde naranja */
+        }
+        .cuento-bloque { background: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 15px; border: 3px solid #fff; } 
+        #page-historia .cuento-bloque p { color: #1e88e5; font-weight: 700; text-shadow: none; }
+        #page-historia .cuento-bloque strong { color: #ff6f00; }
+        .historia-botones { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center; padding-bottom: 30px; }
+        
+        /* -- Ventana Sorpresa -- */
+        #sorpresa-popup { 
+            background: linear-gradient(135deg, rgba(255, 167, 38, 0.9), rgba(251, 140, 0, 0.95)); /* Degradado naranja */
+            /* Patrón de estrellas */
+             background-image: 
+                 radial-gradient(circle at 15px 15px, rgba(255, 255, 255, 0.3) 2px, transparent 3px),
+                 radial-gradient(circle at 45px 45px, rgba(255, 255, 255, 0.3) 2px, transparent 3px);
+             background-size: 60px 60px;
+        }
+        .sorpresa-content { 
+            padding: 40px 30px; border: 5px solid #fff; border-radius: 25px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4); 
+            background: #fb8c00; 
+        }
+        #typewriter-text { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 2em; color: #fff; line-height: 1.3; text-shadow: 3px 3px #e65100; }
+        .close-popup { font-size: 45px; color: #fff; text-shadow: 1px 1px #e65100; }
+        
+        /* -- Lluvia Bluey -- */
+        @keyframes fall { 0% { top: -10%; transform: rotate(0deg); } 100% { top: 110%; transform: rotate(360deg); } }
+        .bluey-rain { position: absolute; font-size: 2em; animation: fall linear infinite; top: -10%; opacity: 0.9; animation-duration: var(--animation-duration, 5s); animation-delay: var(--animation-delay, 0s); }
+
+        /* --- Página 4: Cierre --- */
+        #page-cierre { background: linear-gradient(to bottom, #ffe0b2, #ffcc80); /* Degradado Naranja Pálido */ }
+        #page-cierre h1 { color: #e65100; } 
+        #page-cierre .logo { border: 3px dashed #0277bd; /* Borde azul */ }
+        #page-cierre .lema { font-weight: 700; color: #5d4037; } /* Marrón */
+        #page-cierre .frase-final { color: #0277bd; font-weight: 900; }
+        
+        /* --- PÁGINA 5: Certificado --- */
+        #page-certificado { background-color: #e3f2fd; /* Azul cielo claro */ }
+        .certificado-content { 
+            background: #fff; border: 10px solid transparent; /* Borde grueso transparente */
+            border-image: linear-gradient(to right, #0277bd, #ffb74d, #a5d6a7) 10; /* Borde degradado */
+            border-radius: 15px; padding: 30px; /* Más padding */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .certificado-content h1 { color: #0277bd; border-bottom: 3px solid #ffb74d; /* Línea Naranja */ padding-bottom: 15px; font-size: 2em; }
+        .certificado-content h2 { color: #ff6f00; font-weight: 800; font-size: 1.3em; margin-top: -10px;}
+        .certificado-body { font-size: 1.3em; line-height: 1.7; font-weight: 700; }
+        .campo-rellenable { 
+            font-weight: 900; color: #e65100; background: #fff9c4; 
+            padding: 3px 10px; border-radius: 8px; border-bottom: 2px solid #e65100; 
+            display: inline-block; margin: 0 5px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div id="page-bienvenida" class="page active">
+        <h1>¡G'day!</h1>
+        <p class="animated-message">¿Listo para jugar?</p>
+        <button id="btn-comenzar" class="bluey-button" data-icon="🎾">¡Vamos!</button>
+    </div>
+
+    <div id="page-portada" class="page">
+        <img src="logo.png" alt="Logo Trapo de Luz" class="logo"> 
+        <h1>Pasaporte de Aventuras</h1>
+        <button id="btn-entrar" class="bluey-button" data-icon="✨">¡Empezar!</button>
+    </div>
+
+    <div id="page-historia" class="page">
+        <div class="historia-container">
+            <img src="bluey.png" alt="Bluey"> 
+            <div class="cuento-bloque">
+                <p>¡Hooray! ¡Soy yo!</p>
+                <p>¿Jugamos a algo?</p>
+            </div>
+        </div>
+        <div class="historia-botones">
+            <button id="btn-certificado" class="bluey-button" data-icon="📜">Certificado Familiar</button>
+            <button id="btn-sorpresa" class="bluey-button" data-icon="🤏">¡Garra Mágica!</button>
+            <a href="https://www.instagram.com/trapodeluz/" target="_blank" class="bluey-button" data-icon="📸">Ver Amigos</a>
+        </div>
+    </div>
+
+    <div id="page-cierre" class="page">
+        <img src="logo.png" alt="Logo Trapo de Luz" class="logo"> 
+        <p class="lema">"Cada trapo, una historia; cada historia, una sonrisa."</p>
+        <p class="frase-final">¿De verdad?<br>¡Oh, galletas!<br>¡Nos vemos pronto!</p>
+        <button id="btn-inicio" class="bluey-button" data-icon="🏠">Volver al Inicio</button>
+    </div>
+
+    <div id="page-certificado" class="page">
+        <div class="certificado-content">
+            <h1>Certificado Oficial</h1>
+            <h2>de Diversión Familiar Heeler</h2>
+            <div class="certificado-body">
+                ¡Por mis barbas azules!<br>
+                Se certifica que<br>
+                <span class="campo-rellenable" id="cert-nombre">[Nombre]</span>
+                <br>es ahora compañero de juegos oficial de<br>
+                <span class="campo-rellenable" id="cert-muneco">[Muñeco]</span>
+                <br>desde el día <span class="campo-rellenable" id="cert-fecha">[Fecha]</span>.
+                <br><br>
+                ¡Prepárense para muchas aventuras!
+            </div>
+            <button id="btn-volver-historia" class="bluey-button" data-icon="⬅️">Volver</button>
+        </div>
+    </div>
+
+    <div id="sorpresa-popup">
+        <div id="bluey-rain-container"></div>
+        <div class="sorpresa-content">
+            <button class="close-popup" id="btn-cerrar-popup">&times;</button>
+            <div id="typewriter-text"></div>
+        </div>
+    </div>
+
+    <audio id="sound-background" src="bluey_fondo.mp3" loop preload="auto"></audio>
+    <audio id="sound-magic" src="bluey_magia.mp3" preload="auto"></audio>
+    <audio id="sound-click" src="bluey_click.mp3" preload="auto"></audio>
+    <audio id="sound-bounce" src="bluey_rebote.mp3" preload="auto"></audio>
+
+
+    <script>
+        // --- Referencias a Elementos ---
+        const pages = document.querySelectorAll('.page');
+        const btnComenzar = document.getElementById('btn-comenzar');
+        const btnEntrar = document.getElementById('btn-entrar');
+        const btnSorpresa = document.getElementById('btn-sorpresa');
+        const btnInicio = document.getElementById('btn-inicio');
+        const btnCerrarPopup = document.getElementById('btn-cerrar-popup');
+        const popup = document.getElementById('sorpresa-popup');
+        const btnCertificado = document.getElementById('btn-certificado');
+        const btnVolverHistoria = document.getElementById('btn-volver-historia');
+        
+        const soundMagic = document.getElementById('sound-magic');
+        const soundClick = document.getElementById('sound-click');
+        const soundBounce = document.getElementById('sound-bounce');
+        const soundBackground = document.getElementById('sound-background');
+        
+        // --- Variables de Estado ---
+        let audioUnlocked = false;
+        
+        // --- Funciones de Audio ---
+        function unlockAllAudio() {
+            console.log("Intentando desbloquear audio...");
+            if (audioUnlocked) { console.log("Audio ya desbloqueado."); return Promise.resolve(); }
+            const allSounds = [soundMagic, soundClick, soundBounce, soundBackground];
+            const promises = []; 
+            allSounds.forEach(sound => {
+                if (!sound) { console.error("Error: Elemento de audio no encontrado."); return; }
+                const promise = sound.play()
+                    .then(() => { sound.pause(); sound.currentTime = 0; console.log(`Audio ${sound.id} desbloqueado.`); })
+                    .catch(error => { console.warn(`No se pudo desbloquear ${sound.id}. Error: ${error.message}`); });
+                promises.push(promise);
+            });
+            return Promise.allSettled(promises).then(() => {
+                audioUnlocked = true;
+                console.log("Desbloqueo de audio completado.");
+                if (soundBackground && soundBackground.paused) {
+                    soundBackground.volume = 0.4; 
+                    soundBackground.play().catch(e => console.error("Error al iniciar música de fondo:", e.message));
+                }
+            });
+        }
+        
+        function playSound(sound, reset = true) {
+            console.log(`Intentando reproducir ${sound ? sound.id : 'sonido nulo'}`);
+            if (!audioUnlocked) { console.log("Audio no desbloqueado, reproducción cancelada."); return; }
+            if (!sound) { console.error("Error: Intentando reproducir un sonido que no existe."); return; }
+            sound.play()
+                .then(() => { if (reset) { sound.currentTime = 0; } console.log(`Reproduciendo ${sound.id}`); })
+                .catch(error => { console.error(`Error al reproducir ${sound.id}: ${error.message}`); });
+        }
+        
+        // --- Función de Navegación ---
+        function goToPage(pageId) {
+            console.log(`Navegando a: ${pageId}`);
+            pages.forEach(page => { page.classList.remove('active'); });
+            const newPage = document.getElementById(pageId);
+            if (newPage) { newPage.classList.add('active'); newPage.scrollTop = 0; console.log(`Página ${pageId} activada.`); } 
+            else { console.error(`Error: No se encontró la página con ID ${pageId}`); }
+        }
+
+        // --- Event Listeners ---
+        if (btnComenzar) {
+            btnComenzar.addEventListener('click', (e) => {
+                e.stopPropagation(); console.log("Botón Comenzar clickeado.");
+                unlockAllAudio().then(() => {
+                     if(audioUnlocked) playSound(soundMagic); 
+                     setTimeout(() => { goToPage('page-portada'); }, 100); 
+                });
+            });
+        } else { console.error("Error: Botón 'btn-comenzar' no encontrado."); }
+
+        if (btnEntrar) { btnEntrar.addEventListener('click', (e) => { e.stopPropagation(); playSound(soundClick); goToPage('page-historia'); }); } 
+        else { console.error("Error: Botón 'btn-entrar' no encontrado."); }
+
+        if (btnInicio) { btnInicio.addEventListener('click', (e) => { e.stopPropagation(); playSound(soundBounce); goToPage('page-bienvenida'); }); } 
+        else { console.error("Error: Botón 'btn-inicio' no encontrado."); }
+
+        if (btnSorpresa) {
+            btnSorpresa.addEventListener('click', (e) => {
+                e.stopPropagation(); playSound(soundMagic);
+                if (popup) popup.classList.add('active'); else console.error("Popup no encontrado");
+                startBlueyRain();
+                const textoSorpresa = "¡La Garra Mágica tiene algo para ti!... ¡Es un GRAN WACKADOO! 🎉 ¡Diviértete mucho!";
+                startTypewriter(textoSorpresa, 'typewriter-text');
+            });
+        } else { console.error("Error: Botón 'btn-sorpresa' no encontrado."); }
+
+        if (btnCerrarPopup) { btnCerrarPopup.addEventListener('click', (e) => { e.stopPropagation(); if (popup) popup.classList.remove('active'); stopBlueyRain(); }); } 
+        else { console.error("Error: Botón 'btn-cerrar-popup' no encontrado."); }
+        
+        function popularCertificado() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const nombre = urlParams.get('nombre'); 
+            const muneco = urlParams.get('muneco'); 
+            const fecha = urlParams.get('fecha');
+            const elNombre = document.getElementById('cert-nombre'); 
+            const elMuneco = document.getElementById('cert-muneco'); 
+            const elFecha = document.getElementById('cert-fecha');
+            
+            if (elNombre) { if (nombre) { elNombre.textContent = nombre; } else { elNombre.textContent = "[Nombre]"; } } else { console.error("Elemento cert-nombre no encontrado"); }
+            if (elMuneco) { if (muneco) { elMuneco.textContent = muneco; } else { elMuneco.textContent = "[Muñeco]"; } } else { console.error("Elemento cert-muneco no encontrado"); } 
+            if (elFecha) { if (fecha) { elFecha.textContent = fecha; } else { elFecha.textContent = "[Fecha]"; } } else { console.error("Elemento cert-fecha no encontrado"); }
+        }
+        
+        if (btnCertificado) { btnCertificado.addEventListener('click', (e) => { e.stopPropagation(); playSound(soundClick); popularCertificado(); goToPage('page-certificado'); }); } 
+        else { console.error("Error: Botón 'btn-certificado' no encontrado."); }
+
+        if (btnVolverHistoria) { btnVolverHistoria.addEventListener('click', (e) => { e.stopPropagation(); playSound(soundClick); goToPage('page-historia'); }); } 
+        else { console.error("Error: Botón 'btn-volver-historia' no encontrado."); }
+        
+        /* --- Funciones de Efectos --- */
+        function startTypewriter(txt, elementId) { let i = 0; const speed = 90; const target = document.getElementById(elementId); if (!target) { console.error(`Elemento ${elementId} no encontrado para typewriter`); return; } target.innerHTML = ''; function type() { if (txt.substring(i, i + 4).toLowerCase() === '<br>') { target.innerHTML += '<br>'; i += 4; } if (i < txt.length) { target.innerHTML += txt.charAt(i); i++; setTimeout(type, speed); } } type(); }
+        
+        // Lluvia Bluey (Pelotas, Estrellas, Huesos)
+        const rainContainer = document.getElementById('bluey-rain-container'); 
+        let rainInterval; 
+        const rainChars = ['🎾', '⭐', '🦴', '✨', '🐾']; // Añadida huella
+
+        function startBlueyRain() { 
+            console.log("Iniciando lluvia Bluey"); 
+            stopBlueyRain(); 
+            rainInterval = setInterval(createRainElement, 150); 
+        }
+        function stopBlueyRain() { 
+            console.log("Deteniendo lluvia Bluey"); 
+            clearInterval(rainInterval); 
+            if (rainContainer) { rainContainer.innerHTML = ''; } 
+        }
+        function createRainElement() { 
+            const element = document.createElement('div'); 
+            element.classList.add('bluey-rain'); 
+            element.innerText = rainChars[Math.floor(Math.random() * rainChars.length)];
+            element.style.left = Math.random() * 100 + 'vw'; 
+            element.style.setProperty('--animation-duration', (Math.random() * 3) + 4 + 's'); 
+            element.style.setProperty('--animation-delay', Math.random() * 1.5 + 's'); 
+            if (rainContainer) { rainContainer.appendChild(element); } 
+            else { console.error("Contenedor 'bluey-rain-container' no encontrado"); return;} 
+            setTimeout(() => { element.remove(); }, 7000); 
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => { console.log("DOM cargado. Bluey Creativo listo."); });
+    </script>
+</body>
+</html>
