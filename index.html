@@ -5,168 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pasaporte de Aventuras Bluey</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
     
     <style>
         /* --- Configuración Global --- */
         body, html {
-            margin: 0; padding: 0; font-family: 'Nunito', sans-serif; 
-            overflow: hidden; height: 100%; background-color: #cceeff; /* Azul cielo más vibrante */
-            touch-action: manipulation; color: #37474f; 
+            margin: 0; padding: 0; font-family: 'Nunito', sans-serif; /* Nueva fuente */
+            overflow: hidden; height: 100%; background-color: #e3f2fd; /* Azul cielo muy claro */
+            touch-action: manipulation; color: #37474f; /* Gris azulado */
         }
 
         /* --- Contenedor de Páginas --- */
         .page {
-            width: 100%; height: 100vh; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease-in-out; /* Suavizado */
-            visibility: hidden; opacity: 0; padding: 20px; box-sizing: border-box; line-height: 1.5;
-            background-color: #cceeff; /* Azul cielo */
-            overflow: hidden; /* Evitar barras de scroll innecesarias */
-            position: relative; /* Para z-index de elementos decorativos */
+            width: 100%; height: 100vh; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: opacity 0.5s ease; visibility: hidden; opacity: 0; padding: 20px; box-sizing: border-box; line-height: 1.6;
+            background-color: #e3f2fd; /* Azul cielo */
         }
         
-        /* Textura sutil como papel */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="f"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="1" result="noise"/><feDiffuseLighting in="noise" lighting-color="%23FFF1E0" surfaceScale="1"><feDistantLight azimuth="45" elevation="60"/></feDiffuseLighting></filter><rect width="100%" height="100%" filter="url(%23f)" opacity="0.15"/></svg>');
-            pointer-events: none;
-            z-index: -1;
+        /* Patrón sutil de huellas */
+        body {
+             background-image: 
+                 radial-gradient(circle at 10px 10px, rgba(128, 128, 128, 0.1) 1px, transparent 1px),
+                 radial-gradient(circle at 50px 50px, rgba(128, 128, 128, 0.1) 1px, transparent 1px);
+             background-size: 60px 60px;
         }
 
         .page.active { visibility: visible; opacity: 1; }
         
-        h1 { 
-            font-family: 'Nunito', sans-serif; font-weight: 900; /* Extra Bold */
-            font-size: 3em; color: #0277bd; /* Azul Bluey */ 
-            text-align: center; 
-            /* Sombra tipo contorno */
-            text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 3px 3px 0 #ff9800; /* Contorno blanco + Sombra naranja */
-            margin-bottom: 10px; line-height: 1.1;
-        }
-        p { 
-            font-size: 1.4em; text-align: center; color: #ff6f00; /* Naranja */ 
-            font-weight: 700; margin-top: 5px; text-shadow: 1px 1px #fff;
-        }
+        h1 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 2.8em; color: #0277bd; /* Azul Bluey */ text-align: center; text-shadow: 1px 1px #fff; margin-bottom: 10px;}
+        p { font-size: 1.3em; text-align: center; color: #ff6f00; /* Naranja */ font-weight: 700; margin-top: 5px; }
 
-        /* --- Botones Estilo Bluey Creativo --- */
+        /* --- Botones Estilo Bluey --- */
         .bluey-button {
-            background: #ffb74d; /* Naranja más brillante */
-            border: none; /* Sin borde */
-            border-bottom: 5px solid #fb8c00; /* Sombra 3D */
+            background: linear-gradient(145deg, #ffb74d, #ffa726); /* Naranja */
+            border: 3px solid #fb8c00; /* Naranja más oscuro */
             color: #fff;
-            padding: 15px 35px; /* Más padding */
-            font-size: 1.3em; font-family: 'Nunito', sans-serif; font-weight: 800;
-            border-radius: 50px; 
-            cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
-            transition: all 0.1s ease-out; /* Transición rápida */
-            -webkit-tap-highlight-color: transparent; width: 90%; max-width: 320px; text-align: center; margin-bottom: 20px; /* Más margen */
-            position: relative; /* Para icono */
+            padding: 15px 30px; font-size: 1.2em; font-family: 'Nunito', sans-serif; font-weight: 800;
+            border-radius: 50px; /* Muy redondeado */
+            cursor: pointer; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15); transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent; width: 90%; max-width: 320px; text-align: center; margin-bottom: 15px;
         }
         .bluey-button:hover { 
-            background: #ffcc80; 
+            background: linear-gradient(145deg, #ffcc80, #ffb74d); 
             transform: translateY(-2px); 
-            border-bottom-width: 7px; /* Aumenta sombra */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            box-shadow: 0 7px 12px rgba(0, 0, 0, 0.2); 
         }
-        .bluey-button:active { 
-            transform: translateY(2px); /* Efecto presionado */
-            border-bottom-width: 3px; /* Reduce sombra */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
-        }
-        a.bluey-button { text-decoration: none; box-sizing: border-box; display: inline-block; }
-
-        /* Iconos opcionales en botones */
-        .bluey-button::before {
-            content: attr(data-icon); /* Usa data-icon="🎾" */
-            margin-right: 10px;
-            font-size: 1.1em;
-        }
+        .bluey-button:active { transform: translateY(1px); box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); }
+        a.bluey-button { text-decoration: none; box-sizing: border-box; }
 
         @keyframes fadeIn { to { opacity: 1; } }
         
         /* --- Página 1: Bienvenida --- */
-        #page-bienvenida { background: linear-gradient(to bottom, #a5d6a7, #81c784); /* Degradado verde */ }
-        #page-bienvenida h1 { color: #fff; text-shadow: -2px -2px 0 #388e3c, 2px -2px 0 #388e3c, -2px 2px 0 #388e3c, 2px 2px 0 #388e3c, 3px 3px 0 #fb8c00; } 
+        #page-bienvenida { background-color: #a5d6a7; /* Verde Césped */ }
+        #page-bienvenida h1 { color: #fff; text-shadow: 2px 2px #388e3c; } /* Verde oscuro */
         #page-bienvenida p { color: #fff; text-shadow: 1px 1px #388e3c; }
-        #page-bienvenida .animated-message { font-size: 1.5em; color: #fff; opacity: 0; animation: fadeIn 2s ease 1s forwards; }
+        #page-bienvenida .animated-message { font-size: 1.4em; color: #fff; opacity: 0; animation: fadeIn 2s ease 1s forwards; }
         
         /* --- Página 2: Portada (Logo) --- */
-        #page-portada { background: linear-gradient(to bottom, #fff9c4, #fff59d); /* Degradado amarillo */ }
-        #page-portada h1 { color: #f57f17; text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff, 3px 3px 0 #0277bd; } 
-        #page-portada .logo { 
-            width: 250px; max-width: 80%; border-radius: 15px; /* Más redondeado */
-            margin-bottom: 20px; background: #fff; padding:15px; 
-            box-shadow: 0 5px 15px rgba(255,111,0,0.5); /* Sombra más pronunciada */
-            border: 3px dashed #ffb74d; /* Borde punteado */
-        }
+        #page-portada { background-color: #fff9c4; /* Amarillo Pálido */ }
+        #page-portada h1 { color: #f57f17; } /* Amarillo oscuro */
+        #page-portada .logo { width: 250px; max-width: 80%; border-radius: 10px; margin-bottom: 20px; background: #fff; padding:10px; box-shadow: 0 0 15px rgba(255,111,0,0.4); }
 
         /* --- Página 3: Historia (Bluey) --- */
-        #page-historia { 
-            overflow-y: auto; justify-content: flex-start; 
-            background: linear-gradient(to bottom, #bbdefb, #90caf9); /* Degradado azul */ 
-        }
-        #page-historia h1 { color: #0d47a1;} 
+        #page-historia { overflow-y: auto; justify-content: flex-start; background-color: #bbdefb; /* Azul más claro */ }
+        #page-historia h1 { color: #0d47a1;} /* Azul oscuro */
+        .historia-container { display: flex; flex-direction: column; gap: 20px; align-items: center; justify-content: flex-start; width: 100%; }
         .historia-container img { 
             width: 280px; max-width: 70%; margin-top: 10px; 
-            filter: drop-shadow(4px 4px 6px rgba(0,0,0,0.3));
-             /* Borde irregular tipo nube/recorte */
-            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            border: 5px solid white;
-            padding: 5px;
-            background-color: white; /* Fondo blanco detrás */
-            box-shadow: 0 0 0 5px #ffb74d; /* Segundo borde naranja */
+            filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.2));
         }
-        .cuento-bloque { background: rgba(255, 255, 255, 0.7); padding: 15px; border-radius: 15px; border: 3px solid #fff; } 
-        #page-historia .cuento-bloque p { color: #1e88e5; font-weight: 700; text-shadow: none; }
-        #page-historia .cuento-bloque strong { color: #ff6f00; }
-        .historia-botones { margin-top: 20px; display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center; padding-bottom: 30px; }
+        .cuento-bloque { background: transparent; width: 90%; max-width: 500px; font-size: 1.2em; line-height: 1.5; text-align: center; }
+        #page-historia .cuento-bloque p { color: #1e88e5; /* Azul medio */ font-weight: 700; }
+        #page-historia .cuento-bloque strong { color: #ff6f00; /* Naranja */ }
+        .historia-botones { margin-top: 15px; display: flex; flex-direction: column; gap: 15px; width: 100%; align-items: center; padding-bottom: 30px; }
         
         /* -- Ventana Sorpresa -- */
-        #sorpresa-popup { 
-            background: linear-gradient(135deg, rgba(255, 167, 38, 0.9), rgba(251, 140, 0, 0.95)); /* Degradado naranja */
-            /* Patrón de estrellas */
-             background-image: 
-                 radial-gradient(circle at 15px 15px, rgba(255, 255, 255, 0.3) 2px, transparent 3px),
-                 radial-gradient(circle at 45px 45px, rgba(255, 255, 255, 0.3) 2px, transparent 3px);
-             background-size: 60px 60px;
-        }
-        .sorpresa-content { 
-            padding: 40px 30px; border: 5px solid #fff; border-radius: 25px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4); 
-            background: #fb8c00; 
-        }
-        #typewriter-text { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 2em; color: #fff; line-height: 1.3; text-shadow: 3px 3px #e65100; }
-        .close-popup { font-size: 45px; color: #fff; text-shadow: 1px 1px #e65100; }
+        #sorpresa-popup { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 167, 38, 0.85); /* Naranja translúcido */ backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: all 0.3s ease; z-index: 100; padding: 20px; box-sizing: border-box; }
+        #sorpresa-popup.active { visibility: visible; opacity: 1; }
+        .sorpresa-content { position: relative; padding: 30px 20px; border: 4px solid #fff; border-radius: 20px; box-shadow: 0 0 30px rgba(0,0,0,0.3); text-align: center; width: 90%; max-width: 500px; background: #fb8c00; /* Naranja más oscuro */ }
+        #typewriter-text { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.8em; color: #fff; line-height: 1.4; text-shadow: 2px 2px #e65100; /* Naranja muy oscuro */ }
+        .close-popup { position: absolute; top: 5px; right: 10px; font-size: 40px; color: #fff; cursor: pointer; background: none; border: none; width: auto; box-shadow: none; margin-bottom: 0; }
         
         /* -- Lluvia Bluey -- */
         @keyframes fall { 0% { top: -10%; transform: rotate(0deg); } 100% { top: 110%; transform: rotate(360deg); } }
         .bluey-rain { position: absolute; font-size: 2em; animation: fall linear infinite; top: -10%; opacity: 0.9; animation-duration: var(--animation-duration, 5s); animation-delay: var(--animation-delay, 0s); }
 
         /* --- Página 4: Cierre --- */
-        #page-cierre { background: linear-gradient(to bottom, #ffe0b2, #ffcc80); /* Degradado Naranja Pálido */ }
-        #page-cierre h1 { color: #e65100; } 
-        #page-cierre .logo { border: 3px dashed #0277bd; /* Borde azul */ }
-        #page-cierre .lema { font-weight: 700; color: #5d4037; } /* Marrón */
-        #page-cierre .frase-final { color: #0277bd; font-weight: 900; }
+        #page-cierre { background-color: #ffe0b2; /* Naranja Pálido */ }
+        #page-cierre h1 { color: #e65100; } /* Naranja oscuro */
+        #page-cierre .logo { width: 200px; max-width: 70%; border-radius: 10px; background: #fff; padding:10px; box-shadow: 0 0 10px rgba(2,119,189,0.3); }
+        #page-cierre .lema { font-size: 1.1em; color: #555; margin-top: 15px; font-weight: 400;}
+        #page-cierre .frase-final { font-size: 1.6em; color: #0277bd; /* Azul Bluey */ font-family: 'Nunito', sans-serif; font-weight: 800; margin-top: 30px; margin-bottom: 30px; }
         
         /* --- PÁGINA 5: Certificado --- */
-        #page-certificado { background-color: #e3f2fd; /* Azul cielo claro */ }
-        .certificado-content { 
-            background: #fff; border: 10px solid transparent; /* Borde grueso transparente */
-            border-image: linear-gradient(to right, #0277bd, #ffb74d, #a5d6a7) 10; /* Borde degradado */
-            border-radius: 15px; padding: 30px; /* Más padding */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .certificado-content h1 { color: #0277bd; border-bottom: 3px solid #ffb74d; /* Línea Naranja */ padding-bottom: 15px; font-size: 2em; }
-        .certificado-content h2 { color: #ff6f00; font-weight: 800; font-size: 1.3em; margin-top: -10px;}
-        .certificado-body { font-size: 1.3em; line-height: 1.7; font-weight: 700; }
-        .campo-rellenable { 
-            font-weight: 900; color: #e65100; background: #fff9c4; 
-            padding: 3px 10px; border-radius: 8px; border-bottom: 2px solid #e65100; 
-            display: inline-block; margin: 0 5px;
-        }
+        #page-certificado { overflow-y: auto; justify-content: flex-start; background-color: #fff9c4; /* Amarillo Pálido */ }
+        .certificado-content { width: 95%; max-width: 700px; background: #fff; border: 5px solid #0277bd; /* Borde Azul Bluey */ border-radius: 15px; padding: 20px; box-sizing: border-box; text-align: center; color: #37474f; margin-top: 20px; }
+        .certificado-content h1 { color: #0277bd; font-size: 1.8em; text-shadow: none; border-bottom: 2px dashed #ffb74d; padding-bottom: 10px; }
+        .certificado-body { font-size: 1.2em; line-height: 1.8; margin-top: 20px; margin-bottom: 30px; font-weight: 700; }
+        .campo-rellenable { font-weight: 800; color: #e65100; /* Naranja oscuro */ background: #fff9c4; padding: 2px 8px; border-radius: 5px; border-bottom: 1px solid #e65100; display: inline-block; margin: 0 3px;}
+        /* >> NUEVA CLASE PARA TEXTO FIJO << */
+        .campo-static { 
+            font-weight: 800; 
+            color: #0277bd; /* Azul Bluey */ 
+            /* Opcional: background: #e3f2fd; padding: 2px 6px; border-radius: 5px; */
+        } 
         
     </style>
 </head>
@@ -175,13 +117,13 @@
     <div id="page-bienvenida" class="page active">
         <h1>¡G'day!</h1>
         <p class="animated-message">¿Listo para jugar?</p>
-        <button id="btn-comenzar" class="bluey-button" data-icon="🎾">¡Vamos!</button>
+        <button id="btn-comenzar" class="bluey-button">🎾 ¡Vamos!</button>
     </div>
 
     <div id="page-portada" class="page">
         <img src="logo.png" alt="Logo Trapo de Luz" class="logo"> 
         <h1>Pasaporte de Aventuras</h1>
-        <button id="btn-entrar" class="bluey-button" data-icon="✨">¡Empezar!</button>
+        <button id="btn-entrar" class="bluey-button">¡Empezar!</button>
     </div>
 
     <div id="page-historia" class="page">
@@ -193,17 +135,17 @@
             </div>
         </div>
         <div class="historia-botones">
-            <button id="btn-certificado" class="bluey-button" data-icon="📜">Certificado Familiar</button>
-            <button id="btn-sorpresa" class="bluey-button" data-icon="🤏">¡Garra Mágica!</button>
-            <a href="https://www.instagram.com/trapodeluz/" target="_blank" class="bluey-button" data-icon="📸">Ver Amigos</a>
+            <button id="btn-certificado" class="bluey-button">📜 Certificado Familiar</button>
+            <button id="btn-sorpresa" class="bluey-button">✨ ¡Garra Mágica!</button>
+            <a href="https://www.instagram.com/trapodeluz/" target="_blank" class="bluey-button">📸 Ver Amigos</a>
         </div>
     </div>
 
     <div id="page-cierre" class="page">
         <img src="logo.png" alt="Logo Trapo de Luz" class="logo"> 
         <p class="lema">"Cada trapo, una historia; cada historia, una sonrisa."</p>
-        <p class="frase-final">¿De verdad?<br>¡Oh, galletas!<br>¡Nos vemos pronto!</p>
-        <button id="btn-inicio" class="bluey-button" data-icon="🏠">Volver al Inicio</button>
+        <p class="frase-final">¿De verdad? ¡Oh, galletas!<br>¡Nos vemos pronto!</p>
+        <button id="btn-inicio" class="bluey-button">🏠 Volver al Inicio</button>
     </div>
 
     <div id="page-certificado" class="page">
@@ -215,12 +157,12 @@
                 Se certifica que<br>
                 <span class="campo-rellenable" id="cert-nombre">[Nombre]</span>
                 <br>es ahora compañero de juegos oficial de<br>
-                <span class="campo-rellenable" id="cert-muneco">[Muñeco]</span>
+                <span class="campo-static">Bluey</span>
                 <br>desde el día <span class="campo-rellenable" id="cert-fecha">[Fecha]</span>.
                 <br><br>
                 ¡Prepárense para muchas aventuras!
             </div>
-            <button id="btn-volver-historia" class="bluey-button" data-icon="⬅️">Volver</button>
+            <button id="btn-volver-historia" class="bluey-button">Volver</button>
         </div>
     </div>
 
@@ -275,7 +217,7 @@
                 audioUnlocked = true;
                 console.log("Desbloqueo de audio completado.");
                 if (soundBackground && soundBackground.paused) {
-                    soundBackground.volume = 0.4; 
+                    soundBackground.volume = 0.4; /* Volumen alegre */
                     soundBackground.play().catch(e => console.error("Error al iniciar música de fondo:", e.message));
                 }
             });
@@ -329,17 +271,15 @@
         if (btnCerrarPopup) { btnCerrarPopup.addEventListener('click', (e) => { e.stopPropagation(); if (popup) popup.classList.remove('active'); stopBlueyRain(); }); } 
         else { console.error("Error: Botón 'btn-cerrar-popup' no encontrado."); }
         
+        // >> JAVASCRIPT SIMPLIFICADO <<
         function popularCertificado() {
             const urlParams = new URLSearchParams(window.location.search);
             const nombre = urlParams.get('nombre'); 
-            const muneco = urlParams.get('muneco'); 
             const fecha = urlParams.get('fecha');
             const elNombre = document.getElementById('cert-nombre'); 
-            const elMuneco = document.getElementById('cert-muneco'); 
             const elFecha = document.getElementById('cert-fecha');
-            
+            // 'muneco' ya no se busca ni se usa aquí
             if (elNombre) { if (nombre) { elNombre.textContent = nombre; } else { elNombre.textContent = "[Nombre]"; } } else { console.error("Elemento cert-nombre no encontrado"); }
-            if (elMuneco) { if (muneco) { elMuneco.textContent = muneco; } else { elMuneco.textContent = "[Muñeco]"; } } else { console.error("Elemento cert-muneco no encontrado"); } 
             if (elFecha) { if (fecha) { elFecha.textContent = fecha; } else { elFecha.textContent = "[Fecha]"; } } else { console.error("Elemento cert-fecha no encontrado"); }
         }
         
@@ -355,7 +295,7 @@
         // Lluvia Bluey (Pelotas, Estrellas, Huesos)
         const rainContainer = document.getElementById('bluey-rain-container'); 
         let rainInterval; 
-        const rainChars = ['🎾', '⭐', '🦴', '✨', '🐾']; // Añadida huella
+        const rainChars = ['🎾', '⭐', '🦴', '✨']; 
 
         function startBlueyRain() { 
             console.log("Iniciando lluvia Bluey"); 
@@ -379,7 +319,7 @@
             setTimeout(() => { element.remove(); }, 7000); 
         }
         
-        document.addEventListener('DOMContentLoaded', () => { console.log("DOM cargado. Bluey Creativo listo."); });
+        document.addEventListener('DOMContentLoaded', () => { console.log("DOM cargado. Bluey - Nombre Fijo listo."); });
     </script>
 </body>
 </html>
